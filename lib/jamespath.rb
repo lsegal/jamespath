@@ -1,6 +1,7 @@
 require_relative './jamespath/tokenizer'
 require_relative './jamespath/parser'
 require_relative './jamespath/vm'
+require_relative './jamespath/version'
 
 module Jamespath
   module_function
