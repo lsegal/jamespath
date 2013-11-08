@@ -17,7 +17,9 @@ module Jamespath
     end
 
     def get_key(key)
-      @objects = @objects.map {|obj| Hash === obj ? obj[key] : nil }.compact
+      @objects = @objects.map { |obj|
+        Hash === obj || Struct === obj ? obj[key] : nil
+      }.compact
     end
 
     def get_idx(idx)
@@ -26,7 +28,7 @@ module Jamespath
 
     def get_key_all(*)
       objs = []
-      @objects.each {|obj| objs += obj.values if Hash === obj }
+      @objects.each {|obj| objs += obj.values if Hash === obj || Struct === obj }
       @objects = objs
     end
 
