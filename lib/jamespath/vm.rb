@@ -1,49 +1,74 @@
 module Jamespath
+  # @note This class is not thread-safe.
   class VM
+    # @api private
+    class ArrayGroup < Array
+      def initialize(arr) push(*arr) end
+    end
+
     attr_reader :instructions
 
     def initialize(instructions)
       @instructions = instructions
     end
 
-    def search(object)
-      @ret_flag = false
-      @orig_objects = @objects = [object]
+    def search(object_to_search)
+      object = object_to_search
       @instructions.each do |instruction|
-        break if @ret_flag
-        send(*instruction)
+        if instruction.first == :ret_if_match
+          if object
+            break # short-circuit or expression
+          else
+            object = object_to_search  # reset search
+          end
+        else
+          object = send(instruction[0], object, instruction[1])
+        end
       end
-      @objects.size <= 1 ? @objects.first : @objects
+
+      object
     end
 
-    def get_key(key)
-      @objects = @objects.map { |obj|
-        Hash === obj || Struct === obj ? obj[key] : nil
-      }.compact
-    end
+    protected
 
-    def get_idx(idx)
-      @objects = @objects.map {|obj| Array === obj ? obj[idx] : nil }.compact
-    end
-
-    def get_key_all(*)
-      objs = []
-      @objects.each {|obj| objs += obj.values if Hash === obj || Struct === obj }
-      @objects = objs
-    end
-
-    def get_idx_all(*)
-      objs = []
-      @objects.each {|obj| objs += obj if Array === obj }
-      @objects = objs
-    end
-
-    def ret_if_match(*)
-      if @objects.size > 0
-        @ret_flag = true
-      else
-        @objects = @orig_objects
+    def get_key(object, key)
+      if struct?(object)
+        object[key]
+      elsif ArrayGroup === object
+        object = object.map {|o| get_key(o, key) }.compact
+        object.length > 0 ? ArrayGroup.new(object) : nil
       end
+    end
+
+    def get_idx(object, idx)
+      if ArrayGroup === object
+        object = object.map {|o| get_idx(o, idx) }.compact
+        object.length > 0 ? ArrayGroup.new(object) : nil
+      elsif array?(object)
+        object[idx]
+      end
+    end
+
+    def get_key_all(object, *)
+      object.respond_to?(:values) ? ArrayGroup.new(object.values) : nil
+    end
+
+    def get_idx_all(object, *)
+      if array?(object)
+        ArrayGroup.new(object)
+      elsif object.respond_to?(:keys)
+        ArrayGroup.new(object.keys)
+      end
+    end
+
+    private
+
+    def struct?(object)
+      Hash === object || Struct === object
+    end
+
+    def array?(object)
+      Array === object
     end
   end
 end
