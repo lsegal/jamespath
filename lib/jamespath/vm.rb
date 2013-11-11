@@ -3,7 +3,7 @@ module Jamespath
   class VM
     # @api private
     class ArrayGroup < Array
-      def initialize(arr) push(*arr) end
+      def initialize(arr) replace(arr) end
     end
 
     attr_reader :instructions
