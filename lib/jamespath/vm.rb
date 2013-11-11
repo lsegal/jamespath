@@ -55,7 +55,10 @@ module Jamespath
 
     def get_idx_all(object, *)
       if array?(object)
-        ArrayGroup.new(object)
+        new_object = object.map do |o|
+          Array === o ? ArrayGroup.new(o) : o
+        end
+        ArrayGroup.new(new_object)
       elsif object.respond_to?(:keys)
         ArrayGroup.new(object.keys)
       end
