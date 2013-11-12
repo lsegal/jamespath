@@ -35,6 +35,8 @@ module Jamespath
       @tokens
     end
 
+    protected
+
     def next_token
       @pos += @scanner.skip(/\s+/) || 0
       TOKENS.each do |type, re|

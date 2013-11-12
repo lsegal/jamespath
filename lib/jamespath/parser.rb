@@ -1,21 +1,30 @@
 require_relative 'tokenizer'
 
 module Jamespath
-  #   expression        : sub_expression | index_expression
-  #                     | or_expression | identifier | '*'
-  #                     | multi_select_list | multi_select_hash;
-  #   sub_expression    : expression '.' expression;
-  #   or_expression     : expression '||' expression;
-  #   index_expression  : expression bracket_specifier | bracket_specifier;
-  #   multi_select_list : '[' non_branched_expr ']';
-  #   multi_select_hash : '{' keyval_expr '}';
-  #   keyval_expr       : identifier ':' non_branched_expr;
-  #   non_branched_expr : identifier
-  #                     | non_branched_expr '.' identifier
-  #                     | non_branched_expr '[' number ']';
-  #   bracket_specifier : '[' number ']' | '[' '*' ']';
-
+  # # Grammar
+  #
+  # ```abnf
+  # expression        : sub_expression | index_expression
+  #                   | or_expression | identifier | '*'
+  #                   | multi_select_list | multi_select_hash;
+  # sub_expression    : expression '.' expression;
+  # or_expression     : expression '||' expression;
+  # index_expression  : expression bracket_specifier | bracket_specifier;
+  # multi_select_list : '[' non_branched_expr ']';
+  # multi_select_hash : '{' keyval_expr '}';
+  # keyval_expr       : identifier ':' non_branched_expr;
+  # non_branched_expr : identifier
+  #                   | non_branched_expr '.' identifier
+  #                   | non_branched_expr '[' number ']';
+  # bracket_specifier : '[' number ']' | '[' '*' ']';
+  # ```
   class Parser
+    # Parses an expression into a set of instructions to be executed by the
+    # {VM}.
+    #
+    # @param source [String] the expression to parse
+    # @return [Array(Symbol, Object)] a set of instructions
+    # @see VM
     def parse(source)
       @tokens = Tokenizer.new.tokenize(source)
       @idx = 0
@@ -23,6 +32,8 @@ module Jamespath
       parse_expression
       @instructions
     end
+
+    protected
 
     def parse_expression
       next_token! do |token|
