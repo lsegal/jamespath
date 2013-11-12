@@ -61,6 +61,8 @@ module Jamespath
         ArrayGroup.new(new_object)
       elsif object.respond_to?(:keys)
         ArrayGroup.new(object.keys)
+      elsif object.respond_to?(:members)
+        ArrayGroup.new(object.members.map(&:to_s))
       end
     end
 
