@@ -40,6 +40,11 @@ module Jamespath
   # is not array-like or hash-like, this instruction sets the object value
   # to nil.
   #
+  # ### `:flatten_list`
+  #
+  # Flattens a list of subarrays into a single array. If the object is not
+  # array-like, this instruction sets the object value to an empty array.
+  #
   # ### `:ret_if_match`
   #
   # Breaks from parsing instructions if the object value is non-nil. If the
@@ -100,7 +105,7 @@ module Jamespath
         object[key]
       elsif ArrayGroup === object
         object = object.map {|o| get_key(o, key) }.compact
-        object.length > 0 ? ArrayGroup.new(object) : nil
+        object.length > 0 ? ArrayGroup.new(object) : []
       end
     end
 
@@ -127,6 +132,16 @@ module Jamespath
         ArrayGroup.new(object.keys)
       elsif object.respond_to?(:members)
         ArrayGroup.new(object.members.map(&:to_s))
+      end
+    end
+
+    def flatten_list(object, *)
+      if array?(object)
+        new_object = []
+        object.each {|o| array?(o) ? (new_object += o) : new_object << o }
+        ArrayGroup.new(new_object)
+      else
+        []
       end
     end
 

@@ -81,7 +81,9 @@ module Jamespath
           assert_next_type :rbracket
           @instructions << [:get_idx_all, nil]
           parse_sub_expression
-        else
+        when :rbracket
+          @instructions << [:flatten_list, nil]
+          parse_sub_expression
         end
       end
     end
