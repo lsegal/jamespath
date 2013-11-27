@@ -16,11 +16,6 @@ module Jamespath
   # @example Searching an object
   #   Jamespath.search('foo.bar', foo: {bar: 'result'}) #=> 'result'
   def search(query, object)
-    if String === object
-      require 'json'
-      object = JSON.parse(object)
-    end
-
     compile(query).search(object)
   end
 
