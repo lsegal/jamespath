@@ -1,4 +1,4 @@
-# Jamespath
+# Jamespath [![Version](https://badge.fury.io/rb/jamespath.png)](http://badge.fury.io/rb/jamespath) [![Build Status](https://travis-ci.org/lsegal/jamespath.png?branch=master)](https://travis-ci.org/lsegal/jamespath)
 
 Jamespath is a library that lets you select objects from deeply nested
 structures, arrays, hashes, or JSON objects using a simple expression
