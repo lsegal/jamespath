@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
   spec.files         = `git ls-files`.split($/)
   spec.test_files    = spec.files.grep(%r{^test/})
+  spec.add_development_dependency('rake', '~> 10.0')
   spec.add_development_dependency('yard', '~> 0.0')
   spec.add_development_dependency('rdiscount', '>= 2.1.7', '< 3.0')
 end
