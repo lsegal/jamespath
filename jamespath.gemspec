@@ -6,6 +6,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Implements JMESpath declarative object searching.'
   spec.description   = 'Like XPath, but for JSON and other structured objects.'
   spec.authors       = ['Loren Segal', 'Trevor Rowe']
+  spec.email         = 'lsegal@soen.ca'
   spec.homepage      = 'http://github.com/lsegal/jamespath'
   spec.license       = 'MIT'
   spec.files         = `git ls-files`.split($/)
