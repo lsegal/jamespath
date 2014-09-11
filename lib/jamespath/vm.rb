@@ -105,7 +105,7 @@ module Jamespath
         object[key]
       elsif ArrayGroup === object
         object = object.map {|o| get_key(o, key) }.compact
-        object.length > 0 ? ArrayGroup.new(object) : []
+        object.length > 0 ? ArrayGroup.new(object) : ArrayGroup.new([])
       end
     end
 
